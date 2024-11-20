@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAS Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div id="main">
+        <h1>NAS Management System</h1>
+
+        <h2>Welcome, {{ session['user'] }}!</h2>  <!-- Display the username from session -->
+        <a href="/logout">Logout</a>  <!-- Logout button -->
+
+        <h3>File Upload</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="fileInput" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <h3>Files in NAS:</h3>
+        <ul id="files"></ul>
+
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
