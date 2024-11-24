@@ -10,19 +10,35 @@
     <div id="main">
         <h1>NAS Management System</h1>
 
-        <h2>Welcome, {{ session['user'] }}!</h2>  <!-- Display the username from session -->
-        <a href="/logout">Logout</a>  <!-- Logout button -->
+        {% if session.get('user') %}
+            <h2>Welcome, {{ session['user'] }}!</h2>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <h2>Please log in to continue.</h2>
+            <a href="/login">Go to Login</a>
+        {% endif %}
 
-        <h3>File Upload</h3>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" id="fileInput" name="file" required>
-            <button type="submit">Upload</button>
-        </form>
+        <h3>Disk Usage Monitoring</h3>
+        <div id="diskUsage"></div>
 
-        <h3>Files in NAS:</h3>
+        {% if session.get('user') %}
+            <h3>Manage Folders</h3>
+            <form id="folderForm">
+                <input type="text" id="folderInput" name="folderName" placeholder="Folder Name" required>
+                <button type="submit">Create Folder</button>
+            </form>
+
+            <h3>Upload a New File</h3>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file" required>
+                <button type="submit">Upload</button>
+            </form>
+        {% endif %}
+
+        <h3>Files and Folders in NAS:</h3>
         <ul id="files"></ul>
-
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

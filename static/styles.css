@@ -1,50 +1,193 @@
+/* General body styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f6f8; /* Light grey background for the body */
+    color: #333; /* Text color */
 }
 
+/* Main container */
 #main {
-    width: 300px;
-    margin: 100px auto;
     padding: 20px;
+    max-width: 1000px;
+    margin: 40px auto;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
+/* Headings */
 h1 {
+    color: #2c3e50; /* Darker shade for the header */
+    font-size: 2.5em;
+    margin-bottom: 20px;
     text-align: center;
 }
 
-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
+h2, h3 {
+    color: #34495e; /* Slightly lighter for secondary headings */
+    margin-bottom: 10px;
+    font-size: 1.5em;
 }
 
+/* Buttons (primary & secondary) */
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
+    padding: 12px 20px;
+    background-color: #3498db; /* Blue button */
     color: white;
     border: none;
+    border-radius: 5px;
+    font-size: 1em;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    width: 100%;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #2980b9; /* Darker blue on hover */
 }
 
 a {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
+    display: inline-block;
+    padding: 12px 20px;
+    margin-top: 10px;
+    background-color: #27ae60; /* Green button */
+    color: white;
     text-decoration: none;
-    color: #4CAF50;
+    border-radius: 5px;
+    font-size: 1.1em;
+    text-align: center;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color 0.3s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    background-color: #2ecc71; /* Lighter green on hover */
 }
+
+/* Form styles */
+input[type="text"], input[type="password"], input[type="file"] {
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* File List */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+ul li {
+    background-color: #ecf0f1;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ul li button {
+    background-color: #f39c12; /* Orange download button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Add margin between buttons */
+    width: auto; /* Allow buttons to adjust width based on content */
+}
+
+ul li button:hover {
+    background-color: #e67e22;
+}
+
+ul li button:last-child {
+    margin-right: 0; /* Remove margin from the last button */
+}
+
+/* Disk Usage Info */
+#diskUsage {
+    padding: 15px;
+    background-color: #ecf0f1; /* Light grey background for system info */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+#diskUsage p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+/* General text for login page */
+h1 {
+    font-size: 2em;
+    text-align: center;
+    color: #2980b9;
+}
+
+input[type="text"], input[type="password"] {
+    margin: 10px 0;
+}
+
+/* Success or Error message */
+.error, .success {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.success {
+    color: green;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #main {
+        padding: 15px;
+        margin: 20px;
+    }
+
+    button, input[type="text"], input[type="password"], input[type="file"] {
+        font-size: 1em;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2, h3 {
+        font-size: 1.3em;
+    }
+
+    ul li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    ul li button {
+        margin-top: 10px;
+    }
+
+    a {
+        width: 100%;
+    }
+}
+
