@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NAS Management System</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div id="main">
+      <h1>NAS Management System</h1>
+
+      {% if session.get('user') %}
+      <div class="nav">
+        <h2>Welcome, {{ session['user'] }}!</h2>
+        <div class="links">
+          <a class="nav-links" href="/">Home</a>
+          {% if session['role'] == 'ADMIN' %}
+          <a class="nav-links" href="/users">Users</a>
+          {% endif %}
+
+          <a class="nav-links" href="/logout">Logout</a>
+        </div>
+      </div>
+      {% else %}
+      <h2>Please log in to continue.</h2>
+      <a href="/login">Go to Login</a>
+      {% endif %}
+
+      <h3>Disk Usage Monitoring</h3>
+      <div id="diskUsage"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='metrics.js') }}"></script>
+  </body>
+</html>
