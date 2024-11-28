@@ -2,12 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const uploadForm = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const filesList = document.getElementById('files');
-    const diskUsageElement = document.getElementById('diskUsage');
     const folderForm = document.getElementById('folderForm');
     const folderInput = document.getElementById('folderInput');
 
     loadFiles();
-    loadDiskUsage();
 
     uploadForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -49,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.message) {
                 alert(data.message);
                 loadFiles();
+                folderForm.reset();
             } else {
                 alert(data.error);
             }
@@ -118,7 +117,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                 alert(data.message);
                                 loadFiles();
                             })
-                            .catch(error => alert('Error deleting file!'));
+                            .catch(error => {
+                                console.log(error.error)
+                                alert('Error deleting file!')
+                            });
                     };
                     listItem.appendChild(deleteButton);
                 }
@@ -130,33 +132,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function loadDiskUsage() {
-        try {
-            const response = await fetch('/system_info');
-            const data = await response.json();
-
-            if (data.error) {
-                diskUsageElement.innerHTML = `Error: ${data.error}`;
-                return;
-            }
-
-            const total = (data.total / (1024 * 1024 * 1024)).toFixed(2);  // GB
-            const used = (data.used / (1024 * 1024 * 1024)).toFixed(2);  // GB
-            const free = (data.free / (1024 * 1024 * 1024)).toFixed(2);  // GB
-            const percent = data.percent;
-            const cpuUsage = data.cpu_percent;
-            const memoryUsage = data.memory_percent;
-
-            diskUsageElement.innerHTML = `
-                <p>Total: ${total} GB</p>
-                <p>Used: ${used} GB</p>
-                <p>Free: ${free} GB</p>
-                <p>Disk Usage: ${percent}%</p>
-                <p>CPU Usage: ${cpuUsage}%</p>
-                <p>Memory Usage: ${memoryUsage}%</p>
-            `;
-        } catch (error) {
-            diskUsageElement.innerHTML = 'Error loading disk usage info.';
-        }
-    }
 });

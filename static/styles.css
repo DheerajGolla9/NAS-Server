@@ -191,3 +191,79 @@ input[type="text"], input[type="password"] {
     }
 }
 
+.nav {
+    display: flex;
+    justify-content: space-between;  /* Space out the content */
+    align-items: center;  /* Vertically center the content */
+}
+
+.links {
+    display: flex;
+    gap: 20px;  /* Space between the links */
+}
+
+a.nav-links{
+    width: 50px;
+}
+///
+
+
+
+/* .user-list {
+    margin-top: 20px;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+.user-item button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.user-item button:hover {
+    background-color: darkred;
+} */
+
+
+
+.user-list {
+    margin-top: 20px;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align vertically center */
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+.user-item span {
+    flex-grow: 1; /* Make the span take up all available space on the left */
+    text-align: left; /* Align text to the left */
+}
+
+.user-item button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 6px 6px;  /* Smaller padding to make the button small */
+    font-size: 12px;   /* Smaller text */
+    cursor: pointer;
+    width: 100px;
+    margin: -2px;
+}
+
+.user-item button:hover {
+    background-color: darkred;
+}
