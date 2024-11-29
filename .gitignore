@@ -1,0 +1,41 @@
+# Virtual environments
+env/
+venv/
+.venv/
+
+# custome direcotires
+uploads
+
+# Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+# Flask instance folder
+instance/
+instance/*
+
+# Logs
+*.log
+logs/
+
+# Configuration files
+*.env
+config.yaml
+config.json
+
+# Database files
+*.db
+*.sqlite3
+
+# Dependency management
+pip-wheel-metadata/
+*.egg-info/
+
+# Editor and OS-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
