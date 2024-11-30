@@ -1,5 +1,7 @@
 from flask import Blueprint,request, jsonify, send_from_directory,current_app
 from flask_login import current_user, login_required
+from app import db
+from model import File
 import psutil
 import shutil
 import os
@@ -15,6 +17,7 @@ files = Blueprint('files', __name__,
 
 # Route to handle file uploads
 @files.route('/upload', methods=['POST'])
+@login_required
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
@@ -23,14 +26,26 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
+    # Construct the directory and file paths
+    user_upload_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
+    filepath = os.path.join(user_upload_folder, file.filename)
+
+    # Ensure the directory exists
+    os.makedirs(user_upload_folder, exist_ok=True)
+
     # Save file to the uploads folder
-    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename)
     file.save(filepath)
+    
+    # Save file information to the database
+    new_file = File(name=file.filename, path=filepath, user_id=current_user.id)
+    db.session.add(new_file)
+    db.session.commit()
     return jsonify({'message': 'File uploaded successfully!'})
 
 
 # Route to handle disk usage stats
 @files.route('/system_info', methods=['GET'])
+@login_required
 def system_info():
     try:
         # Get disk usage stats
@@ -62,19 +77,23 @@ def system_info():
 
 # Route to handle file download
 @files.route('/download/<filename>', methods=['GET'])
+@login_required
 def download_file(filename):
     try:
+        user_folder = current_app.config['UPLOAD_FOLDER'] if current_user.role.name=="ADMIN" else os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
         # Safely serve files from the upload folder
-        return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+        return send_from_directory(user_folder, filename, as_attachment=True)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 # Route to handle file deletion
 @files.route('/delete/<filename>', methods=['POST'])
+@login_required
 def delete_file(filename):
     try:
+        user_folder = current_app.config['UPLOAD_FOLDER'] if current_user.role.name=="ADMIN" else os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
         # Construct the full file path
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        file_path = os.path.join(user_folder, filename)
         
         # Check if the file exists
         if os.path.exists(file_path):
@@ -88,13 +107,15 @@ def delete_file(filename):
         
 # Create Folder Route
 @files.route('/create_folder', methods=['POST'])
+@login_required
 def create_folder():
     data = request.json
     folder_name = data.get('folderName')
     if not folder_name:
         return jsonify({'error': 'Folder name is required'}), 400
-
-    folder_path = os.path.join(current_app.config['UPLOAD_FOLDER'], folder_name)
+     # Construct the directory and file paths
+    user_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
+    folder_path = os.path.join(user_folder, folder_name)
     try:
         os.makedirs(folder_path, exist_ok=True)
         return jsonify({'message': f'Folder {folder_name} created successfully!'})
@@ -103,6 +124,7 @@ def create_folder():
 
 # Rename Folder Route
 @files.route('/rename_folder', methods=['POST'])
+@login_required
 def rename_folder():
     data = request.json
     old_name = data.get('oldName')
@@ -110,9 +132,9 @@ def rename_folder():
 
     if not old_name or not new_name:
         return jsonify({'error': 'Old and new folder names are required'}), 400
-
-    old_path = os.path.join(files.config['UPLOAD_FOLDER'], old_name)
-    new_path = os.path.join(files.config['UPLOAD_FOLDER'], new_name)
+    user_folder = current_app.config['UPLOAD_FOLDER'] if current_user.role.name=="ADMIN" else os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
+    old_path = os.path.join(user_folder, old_name)
+    new_path = os.path.join(user_folder, new_name)
 
     try:
         os.rename(old_path, new_path)
@@ -123,8 +145,10 @@ def rename_folder():
 # Delete Folder Route
 @files.route('/delete_folder/<folder_name>', methods=['POST'])
 @files.route('/delete_folder/<folder_name>', methods=['POST'])
+@login_required
 def delete_folder(folder_name):
-    folder_path = os.path.join('uploads', folder_name)
+    user_folder = current_app.config['UPLOAD_FOLDER'] if current_user.role.name=="ADMIN" else os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
+    folder_path = os.path.join(user_folder, folder_name)
 
     try:
         # Check if the folder exists
@@ -166,17 +190,26 @@ def delete_folder(folder_name):
         logging.error(f"Unexpected error: {str(e)}")
         return jsonify({'error': 'Unexpected error occurred. Please try again.'}), 500
 
-# Updated Files Route
-@files.route('/files', methods=['GET'])  # Keep this if it is the intended route
+@files.route('/files', methods=['GET']) 
+@login_required # Keep this if it is the intended route
 def list_files():
     try:
         items = []
-        for entry in os.listdir(current_app.config['UPLOAD_FOLDER']):
-            full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], entry)
+         # Construct the directory and file paths
+        user_folder = current_app.config['UPLOAD_FOLDER'] if current_user.role.name=="ADMIN" else os.path.join(current_app.config['UPLOAD_FOLDER'], str(current_user.username))
+        # Ensure the directory exists
+        os.makedirs(user_folder, exist_ok=True)
+
+        for entry in os.listdir(user_folder):
+            full_path = os.path.join(user_folder, entry)
             items.append({'name': entry, 'isFolder': os.path.isdir(full_path)})
         return jsonify(items)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+
+
 
 # Rename or modify the conflicting route if needed
 @files.route('/list_all_files', methods=['GET'])  # Example alternative route

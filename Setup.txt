@@ -1,0 +1,9 @@
+1. clone the repo
+2. create env
+3. activate env
+4. pip install -r requirements.txt
+5. try to change db name "app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///<yourdatabase>.db'  # Update with your database path" in app.py file
+   this is not necessasry but if you want you can
+6. run flask db upgrade
+7. uncomment line 57  and 58  in app.py
+8. run the application 

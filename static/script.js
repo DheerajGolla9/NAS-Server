@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.message) {
                 alert(data.message);
                 loadFiles();
+                fileInput.value = '';
             } else {
                 alert(data.error);
             }
@@ -131,5 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Error loading files!');
         }
     }
+
+
 
 });
